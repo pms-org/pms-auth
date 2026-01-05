@@ -12,20 +12,17 @@ import org.springframework.security.web.SecurityFilterChain;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
-@Order(1) // 🔥 REQUIRED
+@Order(1)
 public class AuthorizationServerConfig {
 
     @Bean
-    public SecurityFilterChain authSecurityFilterChain(
-            HttpSecurity http,
-            AuthorizationServerSettings authServerSettings
-    ) throws Exception {
+    SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
+            throws Exception {
 
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
-        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-                .oidc(withDefaults()) // 🔥 ENABLES OIDC
-                .authorizationServerSettings(authServerSettings);
+       
+        http.securityMatcher("/oauth2/**", "/.well-known/**");
 
         return http.build();
     }

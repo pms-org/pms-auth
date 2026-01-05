@@ -7,7 +7,10 @@ services:
     ports:
       - "8081:8081"
     environment:
-      - SERVER_PORT=8081
+      SERVER_PORT: 8081
+      DB_URL: jdbc:postgresql://db-instance-pms.cvk4yqey0ex7.us-east-2.rds.amazonaws.com:5432/pms_db
+      DB_USERNAME: postgres
+      DB_PASSWORD: PMS.2025
     networks:
       - pms-network
 

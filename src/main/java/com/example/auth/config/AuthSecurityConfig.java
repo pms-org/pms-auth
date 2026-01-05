@@ -7,17 +7,19 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@Order(3)
-public class ActuatorSecurityConfig {
+@Order(2)
+public class AuthSecurityConfig {
 
     @Bean
-    SecurityFilterChain actuatorFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain authSecurityFilterChain(HttpSecurity http) throws Exception {
+
         http
-            .securityMatcher("/actuator/**")
+            .securityMatcher("/auth/**")
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll()
-            )
-            .csrf(csrf -> csrf.disable());
+                .requestMatchers("/auth/signup").permitAll()
+                .anyRequest().authenticated()
+            );
 
         return http.build();
     }
