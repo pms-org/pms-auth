@@ -22,13 +22,6 @@ public class AuthenticationConfig {
         this.userRepository = userRepository;
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
-
-
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -47,7 +40,6 @@ public class AuthenticationConfig {
     }
 
     @Bean
-    @Primary
     public AuthenticationManager authenticationManager(DaoAuthenticationProvider authProvider) {
         // This exposes AuthenticationManager globally for injection
         return new ProviderManager(authProvider);
