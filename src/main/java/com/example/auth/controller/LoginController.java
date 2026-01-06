@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
@@ -20,51 +21,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.auth.dto.LoginRequest;
 
-
 @RestController
 @RequestMapping("/auth")
 public class LoginController {
 
-    private final AuthenticationManager authManager;
+    private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtEncoder jwtEncoder;
 
-    public LoginController(AuthenticationManager authManager,
-                           JwtEncoder jwtEncoder) {
-        this.authManager = authManager;
+    public LoginController(
+            AuthenticationConfiguration authenticationConfiguration,
+            JwtEncoder jwtEncoder
+    ) {
+        this.authenticationConfiguration = authenticationConfiguration;
         this.jwtEncoder = jwtEncoder;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest req) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) throws Exception {
 
-        Authentication authentication = authManager.authenticate(
+        AuthenticationManager authenticationManager =
+                authenticationConfiguration.getAuthenticationManager();
+
+        Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        req.getUsername(),
-                        req.getPassword()
+                        request.getUsername(),
+                        request.getPassword()
                 )
         );
 
-        Instant now = Instant.now();
-
-        String token = jwtEncoder.encode(
-                JwtEncoderParameters.from(
-                        JwsHeader.with(SignatureAlgorithm.RS256).build(),
-                        JwtClaimsSet.builder()
-                                .issuer("http://auth:8081")
-                                .subject(authentication.getName())
-                                .issuedAt(now)
-                                .expiresAt(now.plusSeconds(3600))
-                                .claim(
-                                    "roles",
-                                    authentication.getAuthorities()
-                                            .stream()
-                                            .map(GrantedAuthority::getAuthority)
-                                            .toList()
-                                )
-                                .build()
-                )
-        ).getTokenValue();
-
-        return ResponseEntity.ok(Map.of("access_token", token));
+        return ResponseEntity.ok("LOGIN OK");
     }
 }
