@@ -1,5 +1,6 @@
 package com.example.auth.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,36 +9,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.auth.dto.SignupRequest;
-import com.example.auth.entity.AppUser;
+import com.example.auth.entity.UserEntity;
 import com.example.auth.repository.UserRepository;
 
-
-
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class SignupController {
 
-    private final UserRepository repo;
-    private final PasswordEncoder encoder;
+    @Autowired
+    private UserRepository userRepository;
 
-    public SignupController(UserRepository repo, PasswordEncoder encoder) {
-        this.repo = repo;
-        this.encoder = encoder;
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody SignupRequest req) {
-
-        if (repo.findByUsername(req.getUsername()).isPresent()) {
-            return ResponseEntity.badRequest().body("User exists");
+    public ResponseEntity<String> registerUser(@RequestBody SignupRequest request) {
+        if (userRepository.existsByUsername(request.getUsername())) {
+            return ResponseEntity.badRequest().body("Username taken!");
         }
 
-        AppUser user = new AppUser();
-        user.setUsername(req.getUsername());
-        user.setPassword(encoder.encode(req.getPassword()));
-        user.setRole(req.getRole());
+        UserEntity user = new UserEntity();
+        user.setUsername(request.getUsername());
+        // CRITICAL: Encode the password before saving!
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole("ROLE_USER");
 
-        repo.save(user);
-        return ResponseEntity.ok("User created");
+        userRepository.save(user);
+        return ResponseEntity.ok("User registered successfully");
     }
 }
