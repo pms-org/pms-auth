@@ -3,8 +3,10 @@ pipeline {
 
     /* ✅ Tell Jenkins to install & use Maven */
     tools {
-        maven 'maven-3.9'
-    }
+    maven 'maven-3.9'
+    jdk 'jdk-21'
+}
+
 
     environment {
         DOCKER_IMAGE = "neha544/pms-auth-auth"
