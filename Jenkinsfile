@@ -57,16 +57,7 @@ pipeline {
             }
         }
 
-        stage('Deploy (Docker Compose)') {
-            steps {
-                sh '''
-                docker compose down || true
-                docker compose pull
-                docker compose up -d
-                '''
-            }
-        }
-    }
+        
 
     post {
         success {
