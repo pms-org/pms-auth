@@ -1,12 +1,11 @@
 pipeline {
     agent any
 
-    /* ✅ Tell Jenkins to install & use Maven */
+    /* ✅ Tell Jenkins to install & use Maven & JDK */
     tools {
-    maven 'maven-3.9'
-    jdk 'jdk-21'
-}
-
+        maven 'maven-3.9'
+        jdk 'jdk-21'
+    }
 
     environment {
         DOCKER_IMAGE = "neha544/pms-auth-auth"
@@ -56,12 +55,11 @@ pipeline {
                 sh 'docker push ${DOCKER_IMAGE}:${DOCKER_TAG}'
             }
         }
-
-        
+    }
 
     post {
         success {
-            echo "✅ Build, Push & Deploy Successful"
+            echo "✅ Build & Push Successful"
         }
         failure {
             echo "❌ Pipeline Failed"
