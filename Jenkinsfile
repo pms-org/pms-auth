@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    /* ✅ Tell Jenkins to install & use Maven */
+    tools {
+        maven 'maven-3.9'
+    }
+
     environment {
         DOCKER_IMAGE = "neha544/pms-auth-auth"
         DOCKER_TAG   = "latest"
@@ -24,41 +29,39 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh """
+                sh '''
                 docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
-                """
+                '''
             }
         }
 
-        stage('Docker Hub Login') {
+        stage('Docker Hub Login (Token)') {
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: DOCKER_CREDS,
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
-                    sh """
+                    sh '''
                     echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                    """
+                    '''
                 }
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                sh """
-                docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
-                """
+                sh 'docker push ${DOCKER_IMAGE}:${DOCKER_TAG}'
             }
         }
 
         stage('Deploy (Docker Compose)') {
             steps {
-                sh """
+                sh '''
                 docker compose down || true
                 docker compose pull
                 docker compose up -d
-                """
+                '''
             }
         }
     }
