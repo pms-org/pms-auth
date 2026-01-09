@@ -21,7 +21,7 @@ public class UserEntity {
 
     private String role;
 
-    // Standard Getters and Setters (Required unless using Lombok)
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
