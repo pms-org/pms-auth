@@ -30,7 +30,7 @@ public class SignupController {
 
         UserEntity user = new UserEntity();
         user.setUsername(request.getUsername());
-        // CRITICAL: Encode the password before saving!
+       
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole("ROLE_USER");
 
