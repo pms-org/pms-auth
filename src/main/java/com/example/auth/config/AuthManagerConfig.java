@@ -10,7 +10,7 @@ public class AuthManagerConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        // ✅ Expose AuthenticationManager so password grant can work
+       
         return config.getAuthenticationManager();
     }
 }
