@@ -1,7 +1,6 @@
 pipeline {
     agent any
 
-    /* ✅ Tell Jenkins to install & use Maven & JDK */
     tools {
         maven 'maven-3.9'
         jdk 'jdk-21'
@@ -59,10 +58,10 @@ pipeline {
 
     post {
         success {
-            echo "✅ Build & Push Successful"
+            echo "Build & Push Successful"
         }
         failure {
-            echo "❌ Pipeline Failed"
+            echo "Pipeline Failed"
         }
     }
 }

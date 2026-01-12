@@ -13,10 +13,10 @@ public class JwtCustomizerConfig {
     public OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer() {
         return context -> {
             // USER JWT
-            if (AuthorizationGrantType.PASSWORD.equals(context.getAuthorizationGrantType())) {
-                context.getClaims().claim("token_type", "USER");
-                context.getClaims().claim("username", context.getPrincipal().getName());
-            }
+            // if (AuthorizationGrantType.PASSWORD.equals(context.getAuthorizationGrantType())) {
+            //     context.getClaims().claim("token_type", "USER");
+            //     context.getClaims().claim("username", context.getPrincipal().getName());
+            // }
 
             // SERVICE JWT
             if (AuthorizationGrantType.CLIENT_CREDENTIALS.equals(context.getAuthorizationGrantType())) {
