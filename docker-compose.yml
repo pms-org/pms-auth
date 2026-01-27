@@ -2,12 +2,14 @@ version: "3.9"
 
 services:
   auth:
-    image: neha544/pms-auth-auth:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: auth
     env_file:
       - .env
     ports:
-      - "8081:8081"
+      - "8085:8081"
     restart: unless-stopped
     networks:
       - pms-network

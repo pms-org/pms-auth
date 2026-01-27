@@ -80,13 +80,16 @@ public class AuthorizationServerConfig {
             HttpSecurity http) throws Exception {
 
         http
-            .securityMatcher("/api/auth/**", "/error")
+            .securityMatcher("/api/auth/**", "/error", "/swagger-ui/**", "/v3/api-docs/**")
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(
                     "/api/auth/signup",
-                    "/api/auth/login")
+                    "/api/auth/login",
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**")
                 .permitAll()
                 .anyRequest().authenticated())
+            .cors(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable());
 
         return http.build();
