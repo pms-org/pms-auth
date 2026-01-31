@@ -49,11 +49,12 @@ public class LoginController {
                 .collect(Collectors.joining(" "));
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("auth-service")
+                .issuer("http://auth:8081")
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expiry))
                 .subject(authentication.getName())
                 .claim("scope", scope)
+                .claim("token_type", "USER")
                 .build();
 
         // 3. Generate Token
