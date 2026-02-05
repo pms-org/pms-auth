@@ -1,5 +1,7 @@
 package com.example.auth.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,9 +25,9 @@ public class SignupController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> registerUser(@RequestBody SignupRequest request) {
+    public ResponseEntity<?> registerUser(@RequestBody SignupRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
-            return ResponseEntity.badRequest().body("Username taken!");
+            return ResponseEntity.badRequest().body(Map.of("message", "Username taken!"));
         }
 
         UserEntity user = new UserEntity();
@@ -35,6 +37,6 @@ public class SignupController {
         user.setRole("ROLE_USER");
 
         userRepository.save(user);
-        return ResponseEntity.ok("User registered successfully");
+        return ResponseEntity.ok(Map.of("message", "User registered successfully"));
     }
 }
